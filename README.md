@@ -53,7 +53,13 @@ The notebook is divided into clearly labeled parts:
   - introduces FGSM adversarial training
   - trains an adversarially trained MNIST model
   - compares standard vs adversarial training
-- `Part III: CIFAR-10 Extension`
+- `Part III: Scaling the Model`
+  - defines a clearly larger MNIST CNN
+  - repeats the clean-training robustness pipeline
+  - repeats the calibration evaluation
+  - repeats FGSM adversarial training
+  - compares small vs large capacity under the same attacks
+- `Part IV: CIFAR-10 Extension`
   - repeats the workflow on CIFAR-10
   - evaluates robustness under different attacks
   - compares standard and adversarial training on CIFAR-10
@@ -135,8 +141,10 @@ For the clearest report, use this order:
 6. Run `Part I.C: Standard Model Calibration Evaluation`
 7. Move to `Part II: FGSM Adversarial Training`
 8. Run the MNIST comparison between standard and adversarial training
-9. Move to `Part III: CIFAR-10 Extension`
-10. Extend the notebook with larger-capacity models if your project requires scaling experiments
+9. Move to `Part III: Scaling the Model`
+10. Repeat the same pipeline for the larger CNN
+11. Compare small vs large model robustness and calibration summaries
+12. Move to `Part IV: CIFAR-10 Extension`
 
 ## Suggested Discussion Points
 
@@ -159,7 +167,7 @@ When writing up results, it is useful to comment on:
 
 Natural next steps for this project are:
 
-- Add explicit large-model variants for the capacity-scaling study
+- Compare multiple larger architectures such as deeper CNN variants or ResNet-18-style models
 - Compare calibration before and after adversarial training at multiple capacities
 - Save summary tables and plots for use in a written report
 - Add temperature scaling as a post-hoc calibration baseline
