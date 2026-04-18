@@ -6,6 +6,9 @@ The primary artifact is:
 
 - [adv_attacks_clean_gpu_v2 (1).ipynb](</C:/Users/Andrew/Desktop/Code Saves/Neural Networks/adv_attacks_clean_gpu_v2 (1).ipynb>)
 
+The notebook is now organized with explicit part markers so it is easier to
+find where each stage of the project begins.
+
 ## Project Goal
 
 The goal is to understand the robustness-calibration tradeoff and how it changes as model capacity increases.
@@ -36,6 +39,24 @@ The notebook currently includes:
   - Negative Log-Likelihood (NLL)
   - Expected Calibration Error (ECE)
   - Reliability diagrams
+
+## Notebook Roadmap
+
+The notebook is divided into clearly labeled parts:
+
+- `Part I: Standard Training Baseline`
+  - defines and trains the clean MNIST small CNN
+  - shows visual FGSM and PGD attack examples
+  - evaluates clean and robust accuracy
+  - evaluates calibration with NLL, ECE, and reliability diagrams
+- `Part II: FGSM Adversarial Training`
+  - introduces FGSM adversarial training
+  - trains an adversarially trained MNIST model
+  - compares standard vs adversarial training
+- `Part III: CIFAR-10 Extension`
+  - repeats the workflow on CIFAR-10
+  - evaluates robustness under different attacks
+  - compares standard and adversarial training on CIFAR-10
 
 ## Standard Training Section
 
@@ -106,14 +127,16 @@ This project is notebook-based.
 
 For the clearest report, use this order:
 
-1. Setup and data loading
-2. Train the standard MNIST small CNN
-3. Evaluate clean, FGSM, and PGD robustness
-4. Run the calibration section for the standard model
-5. Train the FGSM adversarially trained model
-6. Compare standard vs adversarial training
-7. Repeat the workflow for CIFAR-10
-8. Extend the notebook with larger-capacity models if your project requires scaling experiments
+1. Run setup and data loading cells
+2. Start at `Part I: Standard Training Baseline`
+3. Train the standard MNIST small CNN
+4. Run `Part I.A: Visual Attack Examples`
+5. Run `Part I.B: Standard Model Robustness Evaluation`
+6. Run `Part I.C: Standard Model Calibration Evaluation`
+7. Move to `Part II: FGSM Adversarial Training`
+8. Run the MNIST comparison between standard and adversarial training
+9. Move to `Part III: CIFAR-10 Extension`
+10. Extend the notebook with larger-capacity models if your project requires scaling experiments
 
 ## Suggested Discussion Points
 
