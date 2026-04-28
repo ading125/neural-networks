@@ -6,8 +6,10 @@ The primary artifact is:
 
 - [adv_attacks_clean_gpu_v2 (1).ipynb](</C:/Users/Andrew/Desktop/Code Saves/Neural Networks/adv_attacks_clean_gpu_v2 (1).ipynb>)
 
-The notebook is now organized with explicit part markers so it is easier to
-find where each stage of the project begins.
+The notebook is the combined end-to-end project file. It contains the PyTorch
+model implementations, training code, attack code, evaluation code, plots, and
+written explanations in one place. It is organized with explicit part markers
+so it is easier to find where each stage of the project begins.
 
 ## Project Goal
 
@@ -110,6 +112,20 @@ Calibration is measured with:
 - NLL: penalizes confident incorrect predictions
 - ECE: compares model confidence to empirical accuracy across confidence bins
 - Reliability diagrams: visualize whether predicted confidence matches observed accuracy
+
+## Deliverables
+
+This repository now covers the requested deliverables:
+
+- PyTorch implementation of all models inside the notebook
+  - `SmallCNN`
+  - `LargeCNN`
+  - `SmallCIFARCNN`
+- Training and evaluation code inside the notebook
+  - standard training
+  - FGSM adversarial training
+  - clean, FGSM, and PGD evaluation
+  - accuracy, NLL, ECE, and reliability diagrams
 
 ## Repository Structure
 
