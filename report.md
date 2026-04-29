@@ -1,12 +1,12 @@
 # Adversarial Robustness and Calibration in Deep Neural Networks
 
-This report summarizes the UC3M Neural Networks project implemented in [adv_attacks_clean_gpu_v2 (1).ipynb](./adv_attacks_clean_gpu_v2%20(1).ipynb). The repository studies how adversarial robustness and probabilistic calibration interact in convolutional neural networks on MNIST and CIFAR-10. All numerical values below come directly from notebook outputs stored in the repository. When a metric was not saved, it is reported as not available.
+This report summarizes the UC3M Neural Networks project implemented in [adv_attacks_clean_gpu_v2 (1).ipynb](./adv_attacks_clean_gpu_v2%20(1).ipynb). The repository studies how adversarial robustness and probabilistic calibration interact in convolutional neural networks on MNIST and CIFAR-10. All numerical values below come from the latest notebook outputs stored in the repository.
 
 ## 1. Introduction
 
 Neural networks can achieve high clean accuracy while remaining vulnerable to small adversarial perturbations. This project examines that weakness under a white-box threat model, where the attacker has access to the model and its gradients. The analysis focuses on two related questions: how accuracy changes under adversarial attack, and how trustworthy the model's predicted probabilities remain under the same conditions.
 
-The notebook addresses three comparisons. First, it establishes a standard small-CNN baseline on MNIST and evaluates robustness and calibration. Second, it compares standard training with FGSM adversarial training. Third, it studies model scaling with a larger MNIST CNN and then extends the same robustness workflow to CIFAR-10. The relevant robustness curves and reliability diagrams are stored inline in [adv_attacks_clean_gpu_v2 (1).ipynb](./adv_attacks_clean_gpu_v2%20(1).ipynb); there are no standalone saved plot files in the repository.
+The notebook addresses three comparisons. First, it establishes a standard small-CNN baseline on MNIST and evaluates robustness and calibration. Second, it compares standard training with FGSM adversarial training. Third, it studies model scaling with a larger MNIST CNN and then extends the robustness workflow to CIFAR-10. The relevant robustness curves and reliability diagrams are stored inline in [adv_attacks_clean_gpu_v2 (1).ipynb](./adv_attacks_clean_gpu_v2%20(1).ipynb).
 
 ## 2. Experimental Setup
 
@@ -33,7 +33,7 @@ Robustness is evaluated with two white-box `L_\infty` attacks:
 - **FGSM:** a one-step gradient-sign attack
 - **PGD:** an iterative projected gradient attack
 
-The stored sweeps report `FGSM`, `PGD-10`, and `PGD-40`. An earlier MNIST section and the calibration summaries also report `PGD (eps=0.15, steps=20)`.
+The robustness sweeps report `FGSM`, `PGD-10`, and `PGD-40`. The calibration summaries report clean, `FGSM (eps=0.15)`, and `PGD (eps=0.15, steps=20)` for MNIST.
 
 Calibration is measured with:
 
@@ -45,116 +45,163 @@ Calibration is measured with:
 
 ### 3.1 MNIST: small CNN
 
-After 3 epochs of standard training, the small CNN reaches **98.84%** clean test accuracy. Its robustness sweep is:
+After 3 epochs of standard training, the small CNN reaches **98.79%** clean test accuracy. Its robustness sweep is:
 
 | Epsilon | Clean | FGSM | PGD-40 |
 |---|---:|---:|---:|
-| 0.05 | 0.988 | 0.954 | 0.945 |
-| 0.10 | 0.988 | 0.869 | 0.770 |
-| 0.15 | 0.988 | 0.685 | 0.269 |
-| 0.20 | 0.988 | 0.421 | 0.009 |
-| 0.25 | 0.988 | 0.204 | 0.000 |
+| 0.05 | 0.988 | 0.953 | 0.945 |
+| 0.10 | 0.988 | 0.869 | 0.773 |
+| 0.15 | 0.988 | 0.688 | 0.283 |
+| 0.20 | 0.988 | 0.434 | 0.012 |
+| 0.25 | 0.988 | 0.215 | 0.000 |
 
 Its stored calibration summary at `eps=0.15` is:
 
 | Setting | Accuracy | NLL | ECE |
 |---|---:|---:|---:|
-| Clean | 0.9884 | 0.0348 | 0.0023 |
-| FGSM (`eps=0.15`) | 0.6848 | 0.9958 | 0.1550 |
-| PGD (`eps=0.15`, 20 steps) | 0.2977 | 2.6129 | 0.5432 |
+| Clean | 0.9879 | 0.0357 | 0.0017 |
+| FGSM (`eps=0.15`) | 0.6877 | 0.9887 | 0.1560 |
+| PGD (`eps=0.15`, 20 steps) | 0.3095 | 2.5812 | 0.5325 |
 
-The FGSM-adversarially trained small CNN reaches **98.10%** clean test accuracy. Its stored robustness sweep is:
-
-| Epsilon | Clean | FGSM | PGD-40 |
-|---|---:|---:|---:|
-| 0.05 | 0.981 | 0.893 | 0.813 |
-| 0.10 | 0.981 | 0.861 | 0.467 |
-| 0.15 | 0.981 | 0.862 | 0.107 |
-| 0.20 | 0.981 | 0.802 | 0.003 |
-| 0.25 | 0.981 | 0.628 | 0.000 |
-
-ECE and NLL for the adversarially trained small model are not available in the stored outputs.
-
-### 3.2 MNIST: larger CNN
-
-After 3 epochs of standard training, the larger CNN reaches **99.27%** clean test accuracy. Its robustness sweep is:
+The FGSM-adversarially trained small CNN reaches **97.47%** clean test accuracy. Its stored robustness sweep is:
 
 | Epsilon | Clean | FGSM | PGD-40 |
 |---|---:|---:|---:|
-| 0.05 | 0.993 | 0.971 | 0.966 |
-| 0.10 | 0.993 | 0.903 | 0.848 |
-| 0.15 | 0.993 | 0.751 | 0.520 |
-| 0.20 | 0.993 | 0.525 | 0.090 |
-| 0.25 | 0.993 | 0.289 | 0.001 |
+| 0.05 | 0.975 | 0.900 | 0.759 |
+| 0.10 | 0.975 | 0.953 | 0.512 |
+| 0.15 | 0.975 | 0.963 | 0.209 |
+| 0.20 | 0.975 | 0.953 | 0.044 |
+| 0.25 | 0.975 | 0.904 | 0.005 |
 
 Its stored calibration summary at `eps=0.15` is:
 
 | Setting | Accuracy | NLL | ECE |
 |---|---:|---:|---:|
-| Clean | 0.9927 | 0.0227 | 0.0017 |
-| FGSM (`eps=0.15`) | 0.7506 | 0.8034 | 0.1305 |
-| PGD (`eps=0.15`, 20 steps) | 0.5434 | 1.6123 | 0.3074 |
+| Clean | 0.9747 | 0.0798 | 0.0033 |
+| FGSM (`eps=0.15`) | 0.9631 | 0.1175 | 0.0081 |
+| PGD (`eps=0.15`, 20 steps) | 0.2252 | 4.4144 | 0.6622 |
 
-The FGSM-adversarially trained large CNN reaches **98.92%** clean test accuracy. Its stored robustness sweep is:
+### 3.2 MNIST: calibration as epsilon increases
+
+The following table shows how calibration evolves as epsilon increases for the small standard CNN and the small FGSM-adversarially trained CNN.
+
+| Model | Epsilon | Attack | Accuracy | NLL | ECE |
+|---|---:|---|---:|---:|---:|
+| Small CNN (Standard) | 0.05 | FGSM | 0.9529 | 0.1362 | 0.0119 |
+| Small CNN (Standard) | 0.05 | PGD | 0.9453 | 0.1636 | 0.0170 |
+| Small CNN (Standard) | 0.10 | FGSM | 0.8688 | 0.4050 | 0.0477 |
+| Small CNN (Standard) | 0.10 | PGD | 0.7779 | 0.7001 | 0.1073 |
+| Small CNN (Standard) | 0.15 | FGSM | 0.6877 | 0.9887 | 0.1560 |
+| Small CNN (Standard) | 0.15 | PGD | 0.3108 | 2.5803 | 0.5303 |
+| Small CNN (Standard) | 0.20 | FGSM | 0.4341 | 1.9815 | 0.3585 |
+| Small CNN (Standard) | 0.20 | PGD | 0.0208 | 6.3659 | 0.9317 |
+| Small CNN (Standard) | 0.25 | FGSM | 0.2155 | 3.2447 | 0.5693 |
+| Small CNN (Standard) | 0.25 | PGD | 0.0000 | 10.8123 | 0.9900 |
+| Small CNN (FGSM AT) | 0.05 | FGSM | 0.8996 | 0.3060 | 0.0350 |
+| Small CNN (FGSM AT) | 0.05 | PGD | 0.7595 | 0.8710 | 0.1381 |
+| Small CNN (FGSM AT) | 0.10 | FGSM | 0.9529 | 0.1513 | 0.0116 |
+| Small CNN (FGSM AT) | 0.10 | PGD | 0.5189 | 2.0253 | 0.3456 |
+| Small CNN (FGSM AT) | 0.15 | FGSM | 0.9631 | 0.1175 | 0.0081 |
+| Small CNN (FGSM AT) | 0.15 | PGD | 0.2247 | 4.4102 | 0.6627 |
+| Small CNN (FGSM AT) | 0.20 | FGSM | 0.9533 | 0.1456 | 0.0054 |
+| Small CNN (FGSM AT) | 0.20 | PGD | 0.0532 | 8.4219 | 0.8918 |
+| Small CNN (FGSM AT) | 0.25 | FGSM | 0.9044 | 0.3168 | 0.0148 |
+| Small CNN (FGSM AT) | 0.25 | PGD | 0.0082 | 12.9303 | 0.9625 |
+
+### 3.3 MNIST: larger CNN
+
+After 3 epochs of standard training, the larger CNN reaches **99.08%** clean test accuracy. Its robustness sweep is:
 
 | Epsilon | Clean | FGSM | PGD-40 |
 |---|---:|---:|---:|
-| 0.05 | 0.989 | 0.973 | 0.878 |
-| 0.10 | 0.989 | 0.981 | 0.370 |
-| 0.15 | 0.989 | 0.996 | 0.002 |
-| 0.20 | 0.989 | 0.997 | 0.000 |
-| 0.25 | 0.989 | 0.993 | 0.000 |
+| 0.05 | 0.991 | 0.963 | 0.956 |
+| 0.10 | 0.991 | 0.886 | 0.817 |
+| 0.15 | 0.991 | 0.725 | 0.477 |
+| 0.20 | 0.991 | 0.476 | 0.078 |
+| 0.25 | 0.991 | 0.225 | 0.001 |
 
-ECE and NLL for the adversarially trained large model are not available in the stored outputs.
+Its stored calibration summary at `eps=0.15` is:
 
-### 3.3 CIFAR-10 extension
+| Setting | Accuracy | NLL | ECE |
+|---|---:|---:|---:|
+| Clean | 0.9908 | 0.0288 | 0.0024 |
+| FGSM (`eps=0.15`) | 0.7249 | 0.8968 | 0.1340 |
+| PGD (`eps=0.15`, 20 steps) | 0.5041 | 1.7822 | 0.3348 |
 
-After 5 epochs, the standard CIFAR-10 CNN reaches **73.45%** clean test accuracy:
+The FGSM-adversarially trained large CNN reaches **99.04%** clean test accuracy. Its stored robustness sweep is:
 
 | Epsilon | Clean | FGSM | PGD-40 |
 |---|---:|---:|---:|
-| 0.5/255 | 0.735 | 0.649 | 0.644 |
-| 1/255 | 0.735 | 0.567 | 0.551 |
-| 2/255 | 0.735 | 0.420 | 0.362 |
-| 4/255 | 0.735 | 0.217 | 0.115 |
-| 8/255 | 0.735 | 0.067 | 0.006 |
+| 0.05 | 0.990 | 0.983 | 0.974 |
+| 0.10 | 0.990 | 0.974 | 0.912 |
+| 0.15 | 0.990 | 0.976 | 0.553 |
+| 0.20 | 0.990 | 0.981 | 0.107 |
+| 0.25 | 0.990 | 0.977 | 0.004 |
 
-The FGSM-adversarially trained CIFAR-10 model reaches **57.53%** clean test accuracy:
+Its stored calibration summary at `eps=0.15` is:
+
+| Setting | Accuracy | NLL | ECE |
+|---|---:|---:|---:|
+| Clean | 0.9904 | 0.0276 | 0.0022 |
+| FGSM (`eps=0.15`) | 0.9764 | 0.0643 | 0.0030 |
+| PGD (`eps=0.15`, 20 steps) | 0.5833 | 1.3558 | 0.2766 |
+
+### 3.4 CIFAR-10 extension
+
+After 5 epochs, the standard CIFAR-10 CNN reaches **71.30%** clean test accuracy:
 
 | Epsilon | Clean | FGSM | PGD-40 |
 |---|---:|---:|---:|
-| 0.5/255 | 0.575 | 0.557 | 0.556 |
-| 1/255 | 0.575 | 0.536 | 0.534 |
-| 2/255 | 0.575 | 0.492 | 0.487 |
-| 4/255 | 0.575 | 0.426 | 0.405 |
-| 8/255 | 0.575 | 0.309 | 0.250 |
+| 0.5/255 | 0.713 | 0.627 | 0.622 |
+| 1/255 | 0.713 | 0.548 | 0.529 |
+| 2/255 | 0.713 | 0.404 | 0.349 |
+| 4/255 | 0.713 | 0.215 | 0.109 |
+| 8/255 | 0.713 | 0.053 | 0.003 |
 
-Calibration metrics for CIFAR-10 are not available in the stored outputs.
+The FGSM-adversarially trained CIFAR-10 model reaches **62.20%** clean test accuracy:
+
+| Epsilon | Clean | FGSM | PGD-40 |
+|---|---:|---:|---:|
+| 0.5/255 | 0.622 | 0.595 | 0.595 |
+| 1/255 | 0.622 | 0.572 | 0.571 |
+| 2/255 | 0.622 | 0.522 | 0.519 |
+| 4/255 | 0.622 | 0.435 | 0.415 |
+| 8/255 | 0.622 | 0.292 | 0.228 |
+
+Calibration metrics for CIFAR-10 are not included in the stored notebook outputs.
 
 ## 4. Discussion
 
 ### 4.1 Standard training vs FGSM adversarial training
 
-The stored results show the expected tradeoff between clean accuracy and robustness. On MNIST, standard training gives the better clean result for the small model (`0.9884` versus `0.981`), but FGSM adversarial training improves FGSM robustness at larger perturbations. At `eps=0.20`, FGSM accuracy increases from `0.421` to `0.802`. On CIFAR-10, adversarial training lowers clean accuracy (`0.575` versus `0.735`) but improves robustness at larger epsilons; at `8/255`, FGSM accuracy rises from `0.067` to `0.309`, and PGD-40 from `0.006` to `0.250`.
+The stored results show the expected tradeoff between clean accuracy and robustness. On MNIST, standard training gives slightly higher clean accuracy for the small model (`0.9879` versus `0.9747`), but FGSM adversarial training greatly improves FGSM robustness. At `eps=0.15`, FGSM accuracy increases from `0.688` to `0.963`; at `eps=0.20`, it increases from `0.434` to `0.953`.
 
-These outcomes are consistent with the design of FGSM adversarial training: the model learns from both clean and adversarial samples, so it typically sacrifices some clean-data fit in exchange for improved resistance to gradient-based perturbations. However, the MNIST results also show that FGSM adversarial training does not guarantee strong PGD robustness. For the small model at `eps=0.15`, FGSM accuracy improves from `0.685` to `0.862`, but PGD-40 remains low at `0.107`.
+The improvement against PGD is weaker and depends on the model size. For the small CNN at `eps=0.15`, PGD-40 accuracy decreases from `0.283` for standard training to `0.209` for FGSM adversarial training, so FGSM adversarial training does not improve strong PGD robustness in that setting. For the large CNN, however, PGD-40 accuracy at `eps=0.15` improves from `0.477` to `0.553`, so increased capacity helps the adversarially trained model resist PGD more effectively.
+
+On CIFAR-10, adversarial training lowers clean accuracy (`0.622` versus `0.713`) but improves robustness at larger epsilons. At `8/255`, FGSM accuracy rises from `0.053` to `0.292`, and PGD-40 accuracy rises from `0.003` to `0.228`.
 
 ### 4.2 Robustness-calibration tradeoff
 
-The calibration summaries for the standard MNIST models show a clear tradeoff under attack. On clean data, both models are well calibrated: the small standard model has ECE `0.0023` and NLL `0.0348`, while the large standard model has ECE `0.0017` and NLL `0.0227`. Under FGSM at `eps=0.15`, both metrics worsen substantially. For the small model, ECE rises to `0.1550` and NLL to `0.9958`; under PGD-20, they rise further to `0.5432` and `2.6129`. The same pattern holds for the large model, though less severely: FGSM ECE `0.1305`, NLL `0.8034`; PGD-20 ECE `0.3074`, NLL `1.6123`.
+The calibration summaries show that stronger attacks generally worsen calibration. For the standard small CNN, clean ECE is very low (`0.0017`) and NLL is `0.0357`. Under FGSM at `eps=0.15`, ECE rises to `0.1560` and NLL to `0.9887`. Under PGD-20, ECE rises further to `0.5325` and NLL to `2.5812`.
 
-The implication is that stronger attacks reduce not only accuracy but also the reliability of model confidence. In the stored MNIST summaries, PGD is especially informative because it produces both lower accuracy and worse calibration than FGSM. The corresponding reliability diagrams are stored inline in [adv_attacks_clean_gpu_v2 (1).ipynb](./adv_attacks_clean_gpu_v2%20(1).ipynb).
+FGSM adversarial training improves calibration under FGSM attack for both MNIST architectures. For the small CNN at `eps=0.15`, FGSM ECE drops from `0.1560` to `0.0081`, and FGSM NLL drops from `0.9887` to `0.1175`. For the large CNN, FGSM ECE drops from `0.1340` to `0.0030`, and FGSM NLL drops from `0.8968` to `0.0643`.
 
-The repository does not store ECE or NLL for adversarially trained models, so a direct numerical calibration comparison between standard and adversarial training is not available.
+The PGD results are more mixed. For the small CNN, FGSM adversarial training worsens PGD calibration at `eps=0.15`: PGD-20 ECE rises from `0.5325` to `0.6622`, and NLL rises from `2.5812` to `4.4144`. For the large CNN, adversarial training improves PGD calibration: PGD-20 ECE drops from `0.3348` to `0.2766`, and NLL drops from `1.7822` to `1.3558`.
+
+As epsilon increases, calibration usually degrades along with accuracy. This is especially clear under PGD. For the standard small CNN, PGD ECE increases from `0.0170` at `eps=0.05` to `0.9900` at `eps=0.25`. For the FGSM-adversarially trained small CNN, PGD ECE increases from `0.1381` at `eps=0.05` to `0.9625` at `eps=0.25`. This suggests that stronger perturbations make the model's confidence less trustworthy, even when the model is adversarially trained.
+
+The reliability diagrams stored in the notebook support the same conclusion visually. Clean predictions are close to the perfect-calibration line, while attacked predictions, especially PGD predictions, show much larger confidence-accuracy gaps. In the high-epsilon PGD cases, the models are often overconfident: they still assign high confidence even when accuracy has collapsed.
 
 ### 4.3 Effect of model scaling
 
-Model scaling improves the stored MNIST standard-model results. Clean accuracy increases from `0.9884` for the small CNN to `0.9927` for the larger model. At `eps=0.15`, FGSM accuracy improves from `0.6848` to `0.7506`, and PGD-20 accuracy from `0.2977` to `0.5434`. Calibration also improves: clean ECE decreases from `0.0023` to `0.0017`, and PGD-20 ECE from `0.5432` to `0.3074`.
+Model scaling improves the stored MNIST results. Under standard training, clean accuracy increases from `0.9879` for the small CNN to `0.9908` for the larger model. At `eps=0.15`, FGSM accuracy improves from `0.6877` to `0.7249`, and PGD-20 accuracy improves from `0.3095` to `0.5041`.
 
-Within the scope of the stored MNIST standard-model outputs, higher capacity is therefore associated with better clean accuracy, better adversarial accuracy, and lower ECE/NLL. Even so, the larger model still suffers substantial degradation under strong attack, so scaling helps but does not remove the underlying vulnerability.
+Scaling also improves the adversarially trained model. The large FGSM-adversarially trained CNN reaches clean accuracy `0.9904`, FGSM accuracy `0.9764`, and PGD-20 accuracy `0.5833` at `eps=0.15`. This is better than the small FGSM-adversarially trained CNN, which reaches clean accuracy `0.9747`, FGSM accuracy `0.9631`, and PGD-20 accuracy `0.2252`.
+
+Calibration follows a similar pattern. The large adversarially trained CNN has lower PGD-20 ECE (`0.2766`) and NLL (`1.3558`) than the small adversarially trained CNN (`0.6622` ECE and `4.4144` NLL). Within these stored outputs, larger capacity improves both robustness and calibration, although neither model is fully robust at high epsilon.
 
 ## 5. Conclusion
 
-The project provides a coherent notebook-based study of adversarial robustness and calibration. Standard training yields high clean accuracy on MNIST and lower clean accuracy on CIFAR-10, but robustness declines quickly as perturbations grow, especially under PGD. The calibration analysis shows that adversarial vulnerability is not only an accuracy problem: under attack, predicted confidence becomes much less reliable, as reflected in higher ECE and NLL and in the reliability diagrams stored in the notebook.
+The project provides a notebook-based study of adversarial robustness and calibration. Standard training yields high clean accuracy on MNIST and lower clean accuracy on CIFAR-10, but robustness declines quickly as perturbations grow, especially under PGD. Calibration also worsens under attack, which shows that adversarial vulnerability is not only an accuracy problem: the predicted probabilities become less reliable too.
 
-FGSM adversarial training improves robustness against FGSM and, on CIFAR-10, improves stored large-epsilon robustness relative to standard training, though at the cost of lower clean accuracy. The MNIST scaling experiment shows that a larger model can improve clean accuracy, adversarial accuracy, and calibration in the stored standard-model results. Overall, the repository supports a consistent conclusion: adversarial robustness and calibration are closely linked, PGD reveals weaknesses that FGSM alone can miss, and larger capacity helps but does not solve the robustness-calibration problem.
+FGSM adversarial training improves robustness against FGSM very clearly. Its effect on PGD is more limited: the small MNIST CNN does not gain strong PGD robustness, while the larger CNN benefits more. Calibration behaves similarly. FGSM adversarial training greatly improves FGSM calibration, but PGD calibration can still be poor, especially for the smaller model. Overall, the repository supports a consistent conclusion: adversarial robustness and calibration are closely linked, PGD reveals weaknesses that FGSM alone can miss, and increased model capacity helps but does not completely solve the robustness-calibration problem.
